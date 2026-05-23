@@ -14,12 +14,49 @@ import org.acme.service.InvoiceService;
 import java.math.BigDecimal;
 import java.util.Map;
 
+/**
+ * REST resource for invoice operations.
+ * <p>
+ * Exposes endpoints under the {@code /invoice} base path for calculating
+ * invoice totals with automatic currency conversion.
+ * </p>
+ */
 @Path("/invoice")
 public class InvoiceResource {
 
+    /**
+     * The service that handles invoice total calculation logic,
+     * including currency conversion via the Frankfurter API.
+     */
     @Inject
     InvoiceService invoiceService;
 
+    /**
+     * Calculates the total amount of an invoice in the specified base currency.
+     * <p>
+     * The request must contain a valid invoice with:
+     * <ul>
+     *   <li>A non-blank {@code currency} (ISO-4217 code)</li>
+     *   <li>A non-blank {@code date} in {@code YYYY-MM-DD} format</li>
+     *   <li>At least one line item, each with a description, currency, and positive amount</li>
+     * </ul>
+     * </p>
+     *
+     * <h4>HTTP Response Codes</h4>
+     * <ul>
+     *   <li><strong>200 OK</strong> — Total calculated successfully.
+     *       Body: {@code { "total": 1234.56 }}</li>
+     *   <li><strong>400 Bad Request</strong> — Missing or invalid fields
+     *       (currency, date, lines). Body: {@code { "error": "..." }}</li>
+     *   <li><strong>404 Not Found</strong> — Exchange rate not available
+     *       for a given currency pair. Body: {@code { "error": "..." }}</li>
+     *   <li><strong>500 Internal Server Error</strong> — Unexpected error
+     *       during calculation. Body: {@code { "error": "..." }}</li>
+     * </ul>
+     *
+     * @param request the request body containing the invoice payload
+     * @return a {@link Response} with the total or an error message
+     */
     @POST
     @Path("/total")
     @Consumes(MediaType.APPLICATION_JSON)
