@@ -1,12 +1,12 @@
 ---
 id: task-6
 title: Write backend unit & integration tests
-status: In Progress
+status: Done
 priority: medium
 milestone: "Part 1: Backend Service (Quarkus)"
 assignee: []
 created_date: '2026-05-23 06:35'
-updated_date: '2026-05-23 07:24'
+updated_date: '2026-05-23 07:38'
 labels:
   - backend
   - testing
@@ -21,9 +21,9 @@ Write Quarkus tests using @QuarkusTest for the InvoiceResource endpoint. Test wi
 
 ## Acceptance Criteria
 
-- [ ] Test for valid invoice returns 200 with correct total
-- [ ] Test for missing fields returns 400
-- [ ] Test for invalid currency returns 404
-- [ ] Test for API failure returns 500
-- [ ] All tests pass with mvn test
+- [x] Test for valid invoice returns 200 with correct total
+- [x] Test for missing fields returns 400
+- [x] Test for invalid currency returns 404
+- [x] Test for API failure returns 500
+- [x] All tests pass with mvn test
 
