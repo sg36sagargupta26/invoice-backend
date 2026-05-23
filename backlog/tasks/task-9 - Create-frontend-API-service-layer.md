@@ -1,11 +1,12 @@
 ---
 id: task-9
 title: Create frontend API service layer
-status: To Do
+status: Done
 priority: high
 milestone: "Part 2: Frontend Application (Next.js)"
 assignee: []
 created_date: '2026-05-23 06:35'
+updated_date: '2026-05-23 09:45'
 labels:
   - frontend
   - api
@@ -20,8 +21,8 @@ Create a TypeScript service module that handles communication with the backend P
 
 ## Acceptance Criteria
 
-- [ ] TypeScript interfaces for InvoiceRequest, LineItem, and response
-- [ ] API service function to POST invoice data
-- [ ] Proper error handling for network/API errors
-- [ ] CORS configuration on backend to allow frontend requests
+- [x] TypeScript interfaces for InvoiceRequest, LineItem, and response
+- [x] API service function to POST invoice data
+- [x] Proper error handling for network/API errors
+- [x] CORS configuration on backend to allow frontend requests
 
