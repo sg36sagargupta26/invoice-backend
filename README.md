@@ -1,62 +1,164 @@
-# code-with-quarkus
+# Invoice Backend
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+A full-stack invoice total calculator with currency conversion. Built with **Quarkus** (Java backend) and **Next.js** (React frontend with MUI).
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+The backend accepts an invoice with line items in different currencies, converts them to a target currency using [Frankfurter API](https://www.frankfurter.app/) exchange rates, and returns the total.
 
-## Running the application in dev mode
+---
 
-You can run your application in dev mode that enables live coding using:
+## Architecture
 
-```shell script
+```
+┌────────────────────┐      POST /invoice/total      ┌──────────────────────┐
+│                    │ ──────────────────────────►   │                      │
+│   Next.js UI       │                               │   Quarkus Backend    │
+│   (localhost:3000) │ ◄──────────────────────────   │   (localhost:8080)   │
+│                    │       JSON response            │                      │
+└────────────────────┘                               └───────┬──────────────┘
+                                                              │
+                                                              │  GET /latest
+                                                              ▼
+                                                   ┌──────────────────────┐
+                                                   │  Frankfurter API     │
+                                                   │  (exchange rates)    │
+                                                   └──────────────────────┘
+```
+
+---
+
+## Prerequisites
+
+- **Java 25+** (the backend uses `maven.compiler.release` set to 25)
+- **Maven** (or use the included `./mvnw` wrapper)
+- **Node.js 20+** (for the frontend)
+- **npm** or **yarn**
+
+---
+
+## Running the Backend (Quarkus)
+
+```shell
+# Start in dev mode with live reload
 ./mvnw quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+The backend will be available at **http://localhost:8080**.
 
-## Packaging and running the application
+### Backend API
 
-The application can be packaged using:
+| Method | Endpoint           | Description                                           |
+|--------|--------------------|-------------------------------------------------------|
+| POST   | `/invoice/total`   | Calculate invoice total with currency conversion       |
 
-```shell script
-./mvnw package
+#### Example Request
+
+```json
+{
+  "invoice": {
+    "currency": "EUR",
+    "date": "2025-05-23",
+    "lines": [
+      { "description": "Consulting", "currency": "USD", "amount": 1000 },
+      { "description": "Hosting",    "currency": "EUR", "amount": 200  },
+      { "description": "Domain",     "currency": "GBP", "amount": 50   }
+    ]
+  }
+}
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+#### Example Response
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
-
-If you want to build an _über-jar_, execute the following command:
-
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
+```json
+{
+  "total": 1278.45
+}
 ```
 
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
+### Running Backend Tests
 
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
+```shell
+./mvnw test
 ```
 
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
+---
 
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
+## Running the Frontend (Next.js)
+
+```shell
+cd invoice-ui
+
+# Install dependencies (first time only)
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
+The frontend will be available at **http://localhost:3000**.
 
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
+### Frontend Environment Variables
 
-## Provided Code
+Create `invoice-ui/.env.local` (already provided):
 
-### REST
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
 
-Easily start your REST Web Services
+### Building for Production
 
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+```shell
+cd invoice-ui
+npm run build
+npm start
+```
+
+---
+
+## Running Both Together (Quick Start)
+
+Open **two terminal tabs**:
+
+| Tab 1 — Backend                          | Tab 2 — Frontend                       |
+|------------------------------------------|----------------------------------------|
+| `./mvnw quarkus:dev`                     | `cd invoice-ui && npm run dev`         |
+
+Then open **http://localhost:3000** in your browser.
+
+---
+
+## CORS Configuration
+
+The backend is pre-configured to accept requests from `http://localhost:3000` (see `src/main/resources/application.properties`).
+
+---
+
+## Tech Stack
+
+| Layer      | Technology                                                |
+|------------|-----------------------------------------------------------|
+| Backend    | Quarkus 3.35, Java 25, RESTEasy Reactive, Jackson         |
+| Frontend   | Next.js 16, React 19, TypeScript, MUI 9 (Material UI)    |
+| API Client | Frankfurter API (exchange rates)                          |
+
+---
+
+## Project Structure
+
+```
+├── pom.xml                          # Maven build (backend)
+├── src/
+│   ├── main/java/org/acme/
+│   │   ├── InvoiceResource.java     # REST endpoint
+│   │   ├── InvoiceService.java      # Business logic
+│   │   └── FrankfurterApi.java      # REST client for exchange rates
+│   └── test/java/org/acme/          # Backend tests
+├── invoice-ui/
+│   ├── package.json                 # Node deps (frontend)
+│   ├── src/
+│   │   ├── app/page.tsx             # Main page (invoice form)
+│   │   ├── services/api.ts          # API service layer
+│   │   ├── types/invoice.ts         # TypeScript interfaces
+│   │   └── theme.ts                 # MUI theme customization
+│   └── .env.local                   # API URL config
+└── README.md
+```
