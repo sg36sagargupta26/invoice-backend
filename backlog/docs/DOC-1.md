@@ -8,7 +8,7 @@ title: Invoice Calculation Application - Implementation Plan
 ## Overview
 Build a full-stack, multi-currency invoice calculation application with:
 - **Backend**: Java Quarkus REST API (port 8080)
-- **Frontend**: Next.js TypeScript application (port 3000)
+- **Frontend**: Next.js TypeScript + Material UI (port 3000)
 - **External API**: Frankfurter.app for historical exchange rates
 
 ---
@@ -71,7 +71,7 @@ src/main/java/org/acme/
 
 ---
 
-## Part 2: Frontend Application (Next.js/TypeScript)
+## Part 2: Frontend Application (Next.js/TypeScript + MUI)
 
 ### Architecture
 ```
@@ -79,53 +79,59 @@ invoice-frontend/
 ├── src/
 │   ├── app/
 │   │   ├── page.tsx              # Main page with invoice form
-│   │   ├── layout.tsx            # Root layout
+│   │   ├── layout.tsx            # Root layout with MUI ThemeProvider
 │   │   └── globals.css           # Global styles
 │   ├── components/
 │   │   ├── InvoiceForm.tsx       # Main invoice form component
-│   │   ├── LineItemRow.tsx       # Single line item row
-│   │   └── ResultDisplay.tsx     # Display calculation result
+│   │   ├── LineItemRow.tsx       # Single line item row (MUI)
+│   │   └── ResultDisplay.tsx     # Display calculation result (MUI)
 │   └── services/
 │       └── invoiceApi.ts         # API service layer
 ```
 
-### Task 7: Bootstrap Next.js App
+### Task 7: Bootstrap Next.js App + MUI
 - `npx create-next-app@latest invoice-frontend --typescript`
-- Configure to run on port 3000
+- Install MUI: `@mui/material`, `@emotion/react`, `@emotion/styled`, `@mui/x-date-pickers`, `dayjs`
+- Configure MUI ThemeProvider in layout.tsx
+- Configure DatePicker with LocalizationProvider (dayjs)
 
 ### Task 8: Create API Service Layer
 - TypeScript interfaces matching backend models
-- `POST /api/invoice/total` function using fetch/axios
+- `POST /api/invoice/total` function using fetch
 - Error handling for network errors and API error responses
 
-### Task 9: Create Invoice Form UI
-- Invoice currency input (text/dropdown)
-- Invoice date input (date picker)
-- Dynamic line items with add/remove buttons
-- Each line: description (text), currency (text), amount (number)
-- Submit button → calls backend → displays result
-- Loading spinner during API call
-- Error display area
+### Task 9: Create Invoice Form UI (MUI Components)
+- **Invoice Date**: MUI DatePicker (`@mui/x-date-pickers`)
+- **Base Currency**: MUI TextField or Autocomplete (e.g., NZD, USD, AUD, EUR, GBP)
+- **Dynamic Line Items**:
+  - Each row: Description (TextField), Amount (TextField type="number"), Currency (TextField/Autocomplete)
+  - Delete button per row (MUI IconButton with DeleteIcon)
+  - "Add Line" button (MUI Button with AddIcon)
+- **Calculate Total**: MUI Button (variant="contained", color="primary")
+  - Shows MUI CircularProgress while loading
+- **Result Display**: MUI Typography or Alert for success
+- **Error Display**: MUI Alert (severity="error") or Snackbar
 
 ### Task 10: Style & Polish
-- Professional CSS (Tailwind or plain CSS)
-- Responsive design
-- Form validation (required fields, positive amounts)
-- Clear visual feedback for success/error states
+- Custom MUI theme (colors, typography)
+- Responsive layout with MUI Grid/Container
+- Form validation (required fields, positive amounts, valid date)
+- MUI Snackbar for success/error notifications
+- Clean, professional UI
 
 ---
 
 ## Data Flow
 ```
-User Input (Form) 
-    → Frontend API Service (TypeScript) 
+User Input (MUI Form) 
+    → API Service (TypeScript) 
     → HTTP POST /invoice/total (JSON) 
     → InvoiceResource (Java) 
     → InvoiceService (Java) 
     → FrankfurterClient (Java) 
     → Frankfurter.app API (External)
     → Response back through the chain
-    → Display result on frontend
+    → Display result on frontend (MUI components)
 ```
 
 ## Currency Conversion Logic
@@ -142,4 +148,18 @@ User Input (Form)
 | Missing/invalid fields | 400 | `Error: Invalid request data` |
 | Exchange rate not found | 404 | `Error: Exchange rate not found for USD to NZD on 2020-07-07` |
 | Unexpected error | 500 | `Error: Internal server error` |
+
+## MUI Component Mapping
+| Requirement | MUI Component |
+|-------------|---------------|
+| Invoice Date | `DatePicker` from `@mui/x-date-pickers` |
+| Currency inputs | `TextField` or `Autocomplete` |
+| Description inputs | `TextField` |
+| Amount inputs | `TextField type="number"` |
+| Add Line button | `Button` with `AddIcon` |
+| Delete Line button | `IconButton` with `DeleteIcon` |
+| Calculate button | `Button` with `CircularProgress` |
+| Result display | `Alert` (success) or `Typography` |
+| Error display | `Alert` (error) or `Snackbar` |
+| Layout | `Container`, `Grid`, `Paper`, `Stack` |
 
