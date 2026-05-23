@@ -1,12 +1,12 @@
 ---
 id: task-8
 title: Create frontend invoice input form UI with MUI
-status: To Do
+status: Done
 priority: high
 milestone: "Part 2: Frontend Application (Next.js)"
 assignee: []
 created_date: '2026-05-23 06:35'
-updated_date: '2026-05-23 07:16'
+updated_date: '2026-05-23 08:42'
 labels:
   - frontend
   - ui
@@ -21,20 +21,20 @@ Build a React component using Material UI components: 1) Invoice Date using MUI 
 
 ## Acceptance Criteria
 
-- [ ] Invoice currency input field
-- [ ] Invoice date input field
-- [ ] Dynamic line items list with add/remove capability
-- [ ] Each line item has description, currency, amount fields
-- [ ] Submit button that calls backend API
-- [ ] Result display area for calculated total
-- [ ] Error display for API errors
-- [ ] MUI DatePicker for invoice date
-- [ ] MUI TextField/Autocomplete for base currency
-- [ ] Dynamic line items list with MUI components
-- [ ] Each line: Description (TextField), Amount (TextField), Currency (TextField/Autocomplete)
-- [ ] Add Line button to add new rows
-- [ ] Delete/Remove button per line item
-- [ ] Calculate Total button (MUI Button)
-- [ ] Result display area for calculated total
-- [ ] Error display for API errors using MUI Alert or Snackbar
+- [x] Invoice currency input field
+- [x] Invoice date input field
+- [x] Dynamic line items list with add/remove capability
+- [x] Each line item has description, currency, amount fields
+- [x] Submit button that calls backend API
+- [x] Result display area for calculated total
+- [x] Error display for API errors
+- [x] MUI DatePicker for invoice date
+- [x] MUI TextField/Autocomplete for base currency
+- [x] Dynamic line items list with MUI components
+- [x] Each line: Description (TextField), Amount (TextField), Currency (TextField/Autocomplete)
+- [x] Add Line button to add new rows
+- [x] Delete/Remove button per line item
+- [x] Calculate Total button (MUI Button)
+- [x] Result display area for calculated total
+- [x] Error display for API errors using MUI Alert or Snackbar
 

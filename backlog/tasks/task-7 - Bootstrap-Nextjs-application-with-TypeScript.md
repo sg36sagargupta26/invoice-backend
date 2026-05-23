@@ -1,12 +1,12 @@
 ---
 id: task-7
 title: Bootstrap Next.js application with TypeScript & MUI
-status: To Do
+status: Done
 priority: high
 milestone: "Part 2: Frontend Application (Next.js)"
 assignee: []
 created_date: '2026-05-23 06:35'
-updated_date: '2026-05-23 07:16'
+updated_date: '2026-05-23 08:39'
 labels:
   - frontend
   - nextjs
@@ -21,13 +21,13 @@ Create a new Next.js application using create-next-app with TypeScript support. 
 
 ## Acceptance Criteria
 
-- [ ] Next.js app created with TypeScript
-- [ ] Project structure with pages/ and components/ directories
-- [ ] API service layer for backend communication
-- [ ] App runs successfully with npm run dev
-- [ ] Next.js app created with TypeScript
-- [ ] Material UI (@mui/material, @emotion/react, @emotion/styled) installed and configured
-- [ ] MUI ThemeProvider set up in layout
-- [ ] Project structure with components/ and services/ directories
-- [ ] App runs successfully with npm run dev
+- [x] Next.js app created with TypeScript
+- [x] Project structure with pages/ and components/ directories
+- [x] API service layer for backend communication
+- [x] App runs successfully with npm run dev
+- [x] Next.js app created with TypeScript
+- [x] Material UI (@mui/material, @emotion/react, @emotion/styled) installed and configured
+- [x] MUI ThemeProvider set up in layout
+- [x] Project structure with components/ and services/ directories
+- [x] App runs successfully with npm run dev
 
