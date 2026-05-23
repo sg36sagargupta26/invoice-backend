@@ -40,29 +40,85 @@ import CurrencyExchange from '@mui/icons-material/CurrencyExchange';
 import type { LineItem } from '@/types';
 import { calculateInvoiceTotal } from '@/services/api';
 
+/** List of ISO-4217 currency codes supported by the Frankfurter API. */
 const CURRENCIES = ['USD', 'EUR', 'GBP', 'JPY', 'CHF', 'CAD', 'AUD', 'INR'];
 
+/**
+ * Shape of validation errors collected by the {@link validate} function.
+ *
+ * @property date         - An error message if the invoice date is missing or invalid.
+ * @property description  - Per-row description errors, keyed by line-item index.
+ * @property amount       - Per-row amount errors, keyed by line-item index.
+ */
 interface FormErrors {
   date?: string;
   description?: Record<number, string>;
   amount?: Record<number, string>;
 }
 
+/**
+ * Home (main) page component for the Invoice Calculator application.
+ *
+ * **State overview:**
+ * - `baseCurrency` — the target currency for the total (defaults to USD).
+ * - `date` — the invoice date, used for exchange-rate lookup.
+ * - `lineItems` — the list of invoice line items being edited.
+ * - `total` — the calculated total amount (null until first successful submission).
+ * - `loading` — whether a calculation request is in-flight.
+ * - `error` — the latest error message (null when no error).
+ * - `snackbar*` — snackbar notification state (message, severity, visibility).
+ * - `errors` / `touched` — form-validation state.
+ *
+ * @returns The full Invoice Calculator page with AppBar, form, results, and footer.
+ */
 export default function Home() {
+  /** The base (target) currency selected for the invoice. */
   const [baseCurrency, setBaseCurrency] = useState('USD');
+
+  /** The invoice date, used as the exchange-rate effective date. */
   const [date, setDate] = useState(dayjs());
+
+  /** The list of line items entered by the user. Starts with one empty row. */
   const [lineItems, setLineItems] = useState<LineItem[]>([
     { description: '', currency: 'USD', amount: 0 },
   ]);
+
+  /** The calculated total in the base currency, or null before first calculation. */
   const [total, setTotal] = useState<number | null>(null);
+
+  /** Whether a calculation request is currently in progress. */
   const [loading, setLoading] = useState(false);
+
+  /** The most recent error message, or null if no error is present. */
   const [error, setError] = useState<string | null>(null);
+
+  /** Whether the snackbar notification is currently visible. */
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  /** The text message displayed inside the snackbar. */
   const [snackbarMessage, setSnackbarMessage] = useState('');
+
+  /** The severity level of the snackbar (success or error). */
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+
+  /** Current form-validation errors, organised by field. */
   const [errors, setErrors] = useState<FormErrors>({});
+
+  /** Whether the form has been submitted at least once (triggers error display). */
   const [touched, setTouched] = useState(false);
 
+  /**
+   * Validates all form fields before submission.
+   *
+   * Checks:
+   * - The date is present and valid.
+   * - Each line item has a non-empty description.
+   * - Each line item has an amount greater than zero.
+   *
+   * Updates {@link errors} and sets {@link touched} to `true`.
+   *
+   * @returns `true` if all fields are valid, `false` otherwise.
+   */
   const validate = useCallback((): boolean => {
     const newErrors: FormErrors = {};
     let valid = true;
@@ -100,6 +156,13 @@ export default function Home() {
     return valid;
   }, [date, lineItems]);
 
+  /**
+   * Adds a new empty line item row to the table.
+   *
+   * The new row defaults to the currently selected base currency.
+   * Any field-level errors associated with the new row index are
+   * cleared to avoid stale validation messages.
+   */
   const handleAddLine = () => {
     setLineItems([...lineItems, { description: '', currency: baseCurrency, amount: 0 }]);
     // Clear field-level errors for the new row
@@ -113,12 +176,29 @@ export default function Home() {
     }
   };
 
+  /**
+   * Removes a line item row by index.
+   *
+   * The last remaining row cannot be removed (enforced by the UI).
+   *
+   * @param index - The 0-based index of the row to remove.
+   */
   const handleRemoveLine = (index: number) => {
     if (lineItems.length > 1) {
       setLineItems(lineItems.filter((_, i) => i !== index));
     }
   };
 
+  /**
+   * Updates a single field of a line item at the given index.
+   *
+   * If the form has been submitted at least once (`touched`), any
+   * validation error for the changed field is cleared immediately.
+   *
+   * @param index - The 0-based index of the line item to update.
+   * @param field - The field to update (`description`, `currency`, or `amount`).
+   * @param value - The new value for the field.
+   */
   const handleLineChange = (index: number, field: keyof LineItem, value: string | number) => {
     const updated = [...lineItems];
     (updated[index] as any)[field] = value;
@@ -143,6 +223,15 @@ export default function Home() {
     }
   };
 
+  /**
+   * Validates the form and submits the invoice to the backend for calculation.
+   *
+   * **Side effects:**
+   * - Sets `loading` to `true` during the request.
+   * - On success: stores the total result and shows a success snackbar.
+   * - On failure: stores the error message and shows an error snackbar.
+   * - Always sets `loading` back to `false` in the `finally` block.
+   */
   const handleSubmit = async () => {
     if (!validate()) return;
 
@@ -176,6 +265,7 @@ export default function Home() {
     }
   };
 
+  /** Whether at least one line item has a non-empty description and a positive amount (enables the Submit button). */
   const isFormValid = lineItems.some(item => item.description.trim() && item.amount > 0);
 
   return (

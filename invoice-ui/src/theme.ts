@@ -1,6 +1,29 @@
 'use client';
 import { createTheme } from '@mui/material/styles';
 
+/**
+ * Application-wide MUI theme.
+ *
+ * **Palette choices:**
+ * - Primary: Blue (#1565C0) — used for the app bar, primary buttons, and key interactive elements.
+ * - Secondary: Teal (#00897B) — used for accents and secondary actions.
+ * - Background: Light grey (#F5F7FA) page background with white (#FFFFFF) paper surfaces.
+ * - Success/Error: Green and red with light tint variants for alerts and result displays.
+ *
+ * **Typography:**
+ * - Uses the "Inter" font family (falling back to Segoe UI, Roboto, etc.).
+ * - Heading variants (h4/h5/h6) have increased weight and tighter letter-spacing for a modern look.
+ * - Subtitle1 and body2 are styled with dark grey tones for improved readability.
+ *
+ * **Component overrides:**
+ * - All MuiPaper surfaces have a subtle box shadow (elevation 1).
+ * - MuiTextField inputs use rounded corners (border-radius: 8px).
+ * - MuiButtons are uppercased by default — overridden to `none` for a cleaner look,
+ *   with elevated shadows on contained variants.
+ * - Table headers have a light blue-grey background and bold text.
+ * - Table cells, alerts, and snackbars share consistent rounding.
+ * - The app bar shadow is reduced for a flatter, more modern aesthetic.
+ */
 const theme = createTheme({
   palette: {
     primary: {
