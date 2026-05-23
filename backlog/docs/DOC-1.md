@@ -41,10 +41,10 @@ src/main/java/org/acme/
 - **FrankfurterResponse**: Maps the Frankfurter API JSON response (amount, base, date, rates map)
 
 ### Task 3: Create Frankfurter.app REST Client
-- Interface with `@RegisterRestClient(baseUri = "https://api.frankfurter.app")`
+- Interface with `@RegisterRestClient(baseUri = "https://api.frankfurter.dev")`
 - Method: `getRates(@PathParam("date") String date, @QueryParam("from") String from, @QueryParam("to") String to)`
 - Returns `FrankfurterResponse`
-- Configure in `application.properties`: `org.acme.client.FrankfurterClient/mp-rest/url=https://api.frankfurter.app`
+- Configure in `application.properties`: `org.acme.client.FrankfurterClient/mp-rest/url=https://api.frankfurter.dev`
 
 ### Task 4: Create InvoiceService
 - `@ApplicationScoped` service

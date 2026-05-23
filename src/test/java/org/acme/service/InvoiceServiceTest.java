@@ -13,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -108,14 +107,14 @@ class InvoiceServiceTest {
         InvoiceRequest request = new InvoiceRequest();
         request.setInvoice(invoice);
 
-        // Mock Frankfurter API response: 1 EUR = 1.10 USD
+        // Mock Frankfurter API v2 response: 1 EUR = 1.10 USD
         FrankfurterResponse mockResponse = new FrankfurterResponse();
-        mockResponse.setAmount(new BigDecimal("100.00"));
         mockResponse.setBase("EUR");
+        mockResponse.setQuote("USD");
         mockResponse.setDate("2024-01-15");
-        mockResponse.setRates(Map.of("USD", new BigDecimal("1.10")));
+        mockResponse.setRate(new BigDecimal("1.10"));
 
-        when(frankfurterClient.getRates(eq("2024-01-15"), eq("EUR"), eq("USD"))).thenReturn(mockResponse);
+        when(frankfurterClient.getRate(eq("EUR"), eq("USD"), eq("2024-01-15"))).thenReturn(mockResponse);
 
         // When
         BigDecimal total = invoiceService.calculateTotal(request);
@@ -151,14 +150,14 @@ class InvoiceServiceTest {
         InvoiceRequest request = new InvoiceRequest();
         request.setInvoice(invoice);
 
-        // Mock Frankfurter API response: 1 EUR = 1.10 USD
+        // Mock Frankfurter API v2 response: 1 EUR = 1.10 USD
         FrankfurterResponse mockResponse = new FrankfurterResponse();
-        mockResponse.setAmount(new BigDecimal("200.00"));
         mockResponse.setBase("EUR");
+        mockResponse.setQuote("USD");
         mockResponse.setDate("2024-01-15");
-        mockResponse.setRates(Map.of("USD", new BigDecimal("1.10")));
+        mockResponse.setRate(new BigDecimal("1.10"));
 
-        when(frankfurterClient.getRates(eq("2024-01-15"), eq("EUR"), eq("USD"))).thenReturn(mockResponse);
+        when(frankfurterClient.getRate(eq("EUR"), eq("USD"), eq("2024-01-15"))).thenReturn(mockResponse);
 
         // When
         BigDecimal total = invoiceService.calculateTotal(request);
@@ -169,8 +168,7 @@ class InvoiceServiceTest {
 
     /**
      * Tests that an {@link IllegalArgumentException} is thrown when the
-     * Frankfurter API response does not contain a rate for the requested
-     * currency pair (e.g., empty rates map).
+     * Frankfurter API response has a null rate.
      */
     @Test
     void testCalculateTotal_RateNotFound() {
@@ -189,14 +187,14 @@ class InvoiceServiceTest {
         InvoiceRequest request = new InvoiceRequest();
         request.setInvoice(invoice);
 
-        // Mock Frankfurter API response with empty rates
+        // Mock Frankfurter API v2 response with null rate
         FrankfurterResponse mockResponse = new FrankfurterResponse();
-        mockResponse.setAmount(new BigDecimal("100.00"));
         mockResponse.setBase("EUR");
+        mockResponse.setQuote("GBP");
         mockResponse.setDate("2024-01-15");
-        mockResponse.setRates(Map.of());
+        mockResponse.setRate(null);
 
-        when(frankfurterClient.getRates(eq("2024-01-15"), eq("EUR"), eq("GBP"))).thenReturn(mockResponse);
+        when(frankfurterClient.getRate(eq("EUR"), eq("GBP"), eq("2024-01-15"))).thenReturn(mockResponse);
 
         // When / Then
         assertThrows(IllegalArgumentException.class, () -> invoiceService.calculateTotal(request));

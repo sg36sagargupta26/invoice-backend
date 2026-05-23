@@ -1,62 +1,61 @@
 package org.acme.model;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 /**
- * Represents the JSON response from the Frankfurter API
- * (<a href="https://www.frankfurter.app">frankfurter.app</a>).
+ * Represents a single exchange rate response from the Frankfurter API v2
+ * (<a href="https://frankfurter.dev">frankfurter.dev</a>).
  * <p>
- * The Frankfurter API publishes daily exchange rates published by
- * the European Central Bank. A typical response looks like:
+ * The v2 endpoint returns a single rate pair. A typical response from
+ * {@code GET /v2/rate/EUR/USD?date=2024-12-01} looks like:
  * <pre>{@code
  * {
- *   "amount": 1.0,
+ *   "date": "2024-12-01",
  *   "base": "EUR",
- *   "date": "2024-01-15",
- *   "rates": { "USD": 1.10, "GBP": 0.86, ... }
+ *   "quote": "USD",
+ *   "rate": 1.0556
  * }
  * }</pre>
  * </p>
  */
 public class FrankfurterResponse {
 
-    /** The amount that was converted (usually {@code 1.0}). */
-    private BigDecimal amount;
-
-    /** The base currency of the response (the {@code from} parameter). */
-    private String base;
-
-    /** The date of the exchange rates in {@code YYYY-MM-DD} format. */
+    /** The date of the exchange rate in {@code YYYY-MM-DD} format. */
     private String date;
 
-    /** A map of target currency codes to their exchange rates against {@link #base}. */
-    private Map<String, BigDecimal> rates;
+    /** The base (source) currency code. */
+    private String base;
+
+    /** The quote (target) currency code. */
+    private String quote;
+
+    /** The exchange rate value from {@link #base} to {@link #quote}. */
+    private BigDecimal rate;
 
     /** Default constructor required for JSON deserialization. */
     public FrankfurterResponse() {
     }
 
     /**
-     * Returns the source amount used by the API.
+     * Returns the date for which this exchange rate is valid.
      *
-     * @return the amount (typically {@code 1.0})
+     * @return the date in {@code YYYY-MM-DD} format
      */
-    public BigDecimal getAmount() {
-        return amount;
+    public String getDate() {
+        return date;
     }
 
     /**
-     * Sets the source amount.
+     * Sets the date for the exchange rate.
      *
-     * @param amount the amount used by the API
+     * @param date the date in {@code YYYY-MM-DD} format
      */
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     /**
-     * Returns the base (source) currency of the exchange rates.
+     * Returns the base (source) currency.
      *
      * @return the ISO-4217 currency code
      */
@@ -74,42 +73,38 @@ public class FrankfurterResponse {
     }
 
     /**
-     * Returns the date for which these exchange rates are valid.
+     * Returns the quote (target) currency.
      *
-     * @return the date in {@code YYYY-MM-DD} format
+     * @return the ISO-4217 currency code
      */
-    public String getDate() {
-        return date;
+    public String getQuote() {
+        return quote;
     }
 
     /**
-     * Sets the date for the exchange rates.
+     * Sets the quote (target) currency.
      *
-     * @param date the date in {@code YYYY-MM-DD} format
+     * @param quote the ISO-4217 currency code
      */
-    public void setDate(String date) {
-        this.date = date;
+    public void setQuote(String quote) {
+        this.quote = quote;
     }
 
     /**
-     * Returns the exchange rates.
-     * <p>
-     * The map keys are ISO-4217 currency codes, and the values are the
-     * exchange rate from {@link #base} to each target currency.
-     * </p>
+     * Returns the exchange rate value from {@link #base} to {@link #quote}.
      *
-     * @return a map of currency → rate, or {@code null} if not set
+     * @return the exchange rate
      */
-    public Map<String, BigDecimal> getRates() {
-        return rates;
+    public BigDecimal getRate() {
+        return rate;
     }
 
     /**
-     * Sets the exchange rates.
+     * Sets the exchange rate value.
      *
-     * @param rates a map of target currency codes to exchange rates
+     * @param rate the exchange rate
      */
-    public void setRates(Map<String, BigDecimal> rates) {
-        this.rates = rates;
+    public void setRate(BigDecimal rate) {
+        this.rate = rate;
     }
 }

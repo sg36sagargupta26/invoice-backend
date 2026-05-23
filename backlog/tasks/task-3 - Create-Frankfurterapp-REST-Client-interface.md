@@ -17,7 +17,7 @@ documentation: []
 ordinal: 1000
 ---
 
-Create a Quarkus REST Client interface (using @RegisterRestClient) to call the Frankfurter.app API (https://api.frankfurter.app) for fetching historical exchange rates. The endpoint should support fetching rates for a specific date and target currency.
+Create a Quarkus REST Client interface (using @RegisterRestClient) to call the Frankfurter API (https://api.frankfurter.dev) for fetching historical exchange rates. The endpoint should support fetching rates for a specific date and target currency.
 
 ## Acceptance Criteria
 

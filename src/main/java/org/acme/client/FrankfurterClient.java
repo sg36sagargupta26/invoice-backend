@@ -8,14 +8,17 @@ import org.acme.model.FrankfurterResponse;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
 /**
- * REST client for the <a href="https://www.frankfurter.app">Frankfurter API</a>.
+ * REST client for the <a href="https://frankfurter.dev">Frankfurter API</a>.
  * <p>
- * Frankfurter provides daily exchange rates published by the European Central Bank.
- * This client is registered under the {@code frankfurter-api} configuration key,
- * with the base URL configured in {@code application.properties}:
+ * Frankfurter provides daily exchange rates blended from multiple central banks.
+ * This client targets the v2 API and is registered under the {@code frankfurter-api}
+ * configuration key, with the base URL configured in {@code application.properties}:
  * <pre>{@code
- * frankfurter-api/mp-rest/url=https://api.frankfurter.app
+ * frankfurter-api/mp-rest/url=https://api.frankfurter.dev/v2
  * }</pre>
+ * <p>
+ * The v2 endpoint {@code GET /rate/{base}/{quote}?date=...} returns a single
+ * exchange rate pair.
  * </p>
  *
  * @see FrankfurterResponse
@@ -25,21 +28,21 @@ import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 public interface FrankfurterClient {
 
     /**
-     * Fetches exchange rates for a specific date from the Frankfurter API.
+     * Fetches a single exchange rate from the Frankfurter API v2.
      * <p>
-     * Example request: {@code GET https://api.frankfurter.app/2024-01-15?from=EUR&to=USD}
+     * Example request: {@code GET https://api.frankfurter.dev/v2/rate/EUR/USD?date=2024-01-15}
      * </p>
      *
-     * @param date the date in {@code YYYY-MM-DD} format for which to fetch rates
-     * @param from the source (base) currency code, e.g. {@code "EUR"}
-     * @param to   the target currency code, e.g. {@code "USD"}
-     * @return a {@link FrankfurterResponse} containing the exchange rate for the target currency
+     * @param base  the source (base) currency code, e.g. {@code "EUR"}
+     * @param quote the target (quote) currency code, e.g. {@code "USD"}
+     * @param date  the date in {@code YYYY-MM-DD} format for which to fetch the rate
+     * @return a {@link FrankfurterResponse} containing the exchange rate pair
      */
     @GET
-    @Path("/{date}")
-    FrankfurterResponse getRates(
-            @PathParam("date") String date,
-            @QueryParam("from") String from,
-            @QueryParam("to") String to
+    @Path("/rate/{base}/{quote}")
+    FrankfurterResponse getRate(
+            @PathParam("base") String base,
+            @PathParam("quote") String quote,
+            @QueryParam("date") String date
     );
 }

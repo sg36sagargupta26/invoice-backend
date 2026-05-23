@@ -74,9 +74,9 @@ public class InvoiceService {
                 // Same currency, no conversion needed
                 total = total.add(lineAmount);
             } else {
-                // Fetch exchange rate from Frankfurter API
-                FrankfurterResponse response = frankfurterClient.getRates(date, lineCurrency, baseCurrency);
-                BigDecimal rate = response.getRates().get(baseCurrency);
+                // Fetch exchange rate from Frankfurter API v2
+                FrankfurterResponse response = frankfurterClient.getRate(lineCurrency, baseCurrency, date);
+                BigDecimal rate = response.getRate();
 
                 if (rate == null) {
                     throw new IllegalArgumentException("Exchange rate not found for " + lineCurrency + " -> " + baseCurrency);
