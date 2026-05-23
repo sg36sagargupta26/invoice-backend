@@ -177,7 +177,6 @@ The backend is pre-configured to accept requests from `http://localhost:3000` (s
 | **Edge Network** | Globally distributed CDN ensures low-latency delivery of static assets and server-rendered pages. |
 | **Preview Deployments** | Every branch or PR automatically gets a unique preview URL, enabling instant review and testing before merging. |
 | **Developer Experience** | Seamless Git integration (push to deploy), environment variable management, and built-in analytics. |
-| **Free Tier** | Generous free tier suitable for small-to-medium projects — no credit card required for basic usage. |
 
 **Alternative:** [Netlify](https://www.netlify.com/) — also excellent for static/Jamstack sites, with a slightly different feature set (split testing, form handling).
 
@@ -227,7 +226,7 @@ The Java/Quarkus backend is best hosted on **AWS Elastic Beanstalk** or **AWS EC
 
 ---
 
-### Infrastructure as Code (Bonus)
+### Infrastructure as Code
 
 Automate the entire cloud setup using **Terraform** or **AWS CDK**:
 
