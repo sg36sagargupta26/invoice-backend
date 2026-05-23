@@ -1,11 +1,12 @@
 ---
 id: task-4
 title: Create InvoiceService with currency conversion logic
-status: To Do
+status: Done
 priority: high
 milestone: "Part 1: Backend Service (Quarkus)"
 assignee: []
 created_date: '2026-05-23 06:35'
+updated_date: '2026-05-23 07:24'
 labels:
   - backend
   - service

@@ -1,11 +1,12 @@
 ---
 id: task-1
 title: Add RESTEasy Reactive & REST Client dependencies to pom.xml
-status: To Do
+status: Done
 priority: high
 milestone: "Part 1: Backend Service (Quarkus)"
 assignee: []
 created_date: '2026-05-23 06:35'
+updated_date: '2026-05-23 07:20'
 labels:
   - backend
   - dependencies

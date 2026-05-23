@@ -1,11 +1,12 @@
 ---
 id: task-6
 title: Write backend unit & integration tests
-status: To Do
+status: In Progress
 priority: medium
 milestone: "Part 1: Backend Service (Quarkus)"
 assignee: []
 created_date: '2026-05-23 06:35'
+updated_date: '2026-05-23 07:24'
 labels:
   - backend
   - testing
