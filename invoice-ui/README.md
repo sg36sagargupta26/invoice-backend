@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice UI
+
+The **Next.js** frontend for the Invoice Backend project — an invoice total calculator with automatic currency conversion.
+
+Built with **Next.js 16**, **React 19**, **MUI 9** (Material UI), and **Day.js**.
+
+---
+
+## Features
+
+- Multi-line invoice form with dynamic row add/remove
+- Per-row currency selection (USD, EUR, GBP, JPY, CHF, CAD, AUD, INR)
+- Invoice date picker (used for exchange rate lookup)
+- Form validation with inline error messages
+- Real-time backend calculation via Frankfurter API/Eurocentral Bank exchange rates
+- Success/error feedback via snackbar notifications
+- Responsive design (mobile-friendly MUI layout)
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
+- **Node.js 20+**
+- **npm** or **yarn**
+- The Quarkus backend running on `http://localhost:8080` (see the [root README](../README.md))
+
+### Install & Run
+
+```shell
+# Install dependencies (first time only)
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open **http://localhost:3000** in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Create `invoice-ui/.env.local` if not already present:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
+
+---
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── page.tsx          # Main page — Invoice form, validation, submission, result display
+│   ├── layout.tsx        # Root layout — MUI ThemeProvider, CssBaseline, Providers
+│   ├── Providers.tsx     # MUI X date-picker localization (Day.js adapter)
+│   └── globals.css       # Global CSS (minimal; MUI handles most styling)
+├── types/
+│   ├── index.ts          # Barrel re-export
+│   └── invoice.ts        # TypeScript interfaces: LineItem, Invoice, InvoiceRequest, etc.
+├── services/
+│   └── api.ts            # API client — calculateInvoiceTotal()
+└── theme.ts              # MUI theme — palette, typography, component overrides
+```
+
+---
+
+## Available Scripts
+
+| Command              | Description                        |
+|----------------------|------------------------------------|
+| `npm run dev`        | Start development server           |
+| `npm run build`      | Create production build            |
+| `npm start`          | Start production server            |
+| `npm run lint`       | Run ESLint                         |
+| `npx tsc --noEmit`   | Type-check without emitting files  |
+
+---
+
+## Tech Stack
+
+| Library            | Version | Purpose                        |
+|--------------------|---------|--------------------------------|
+| Next.js            | 16.2.6  | React framework (App Router)   |
+| React              | 19.2.4  | UI library                     |
+| MUI (Material UI)  | 9.0.1   | Component library + theming    |
+| MUI X Date Pickers | 9.3.0   | Date picker component          |
+| Day.js             | 1.11.20 | Date manipulation library      |
+| TypeScript         | 5.x     | Type safety                    |
+| Tailwind CSS       | 4.x     | Utility CSS (minimal usage)    |
+
+---
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs) — learn about Next.js features and API
+- [MUI Documentation](https://mui.com/material-ui/) — component API and theming guide
+- [Frankfurter API](https://www.frankfurter.app/) — exchange rate data source
